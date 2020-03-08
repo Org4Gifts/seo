@@ -6,6 +6,7 @@
 package com.adima.seo.util;
 
 import java.io.IOException;  
+import org.apache.commons.httpclient.Cookie;
 
 
 import org.apache.commons.httpclient.HttpClient;
@@ -50,6 +51,12 @@ public class HttpClientUtil {
     method.addRequestHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727");  
     //Mozilla/5.0 (Windows NT 6.1; rv:7.0.1) Gecko/20100101 Firefox/7.0.1  
     httpClient.executeMethod(method);  
+    
+    //檢查cookie
+//    Cookie[] cookies = httpClient.getState().getCookies();
+//    for(int i=0; i<cookies.length; i++){
+//        System.out.println("cookies["+i+"]: "+cookies[i]);
+//    }
   
     //根据http头解析正确的字符集  
     String header = method.getResponseHeader("Content-Type").getValue();  
