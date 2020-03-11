@@ -21,6 +21,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 *1、主機IP:45.79.83.149
 *2、vpn名字:自動vpn(可自行修改)
 *3、使用者名稱固定:i.vpno.net
+* 
+* Article source first
+* https://mkyong.com/java/the-type-defaulthttpclient-is-deprecated/
+* second
+* https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/320474/
 */
 public class ConnectVPN{
 public static void main(String[]args) throws IOException{
@@ -56,6 +61,7 @@ String passwd="";
 HttpClient httpClient = HttpClientBuilder.create().build();
 
 HttpGet httpGet=new HttpGet("http://45.79.83.149/mm.txt");
+//HttpGet httpGet=new HttpGet("http://www.google.com.tw/search?q=adima");
 try{
 HttpResponse response=httpClient.execute(httpGet);
 HttpEntity entity=response.getEntity();
