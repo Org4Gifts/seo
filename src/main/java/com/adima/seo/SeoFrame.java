@@ -5,7 +5,15 @@
  */
 package com.adima.seo;
 
+import com.adima.seo.util.AnalyUrl;
+import com.adima.seo.util.HttpClientUtil;
+import static com.adima.seo.util.HttpClientUtil.getHtml;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.httpclient.HttpClient;
 
 /**
  *
@@ -48,57 +56,27 @@ public class SeoFrame extends javax.swing.JFrame {
         jLabel1.setText("KeyWord : ");
 
         inputKey.setText("adima");
-        inputKey.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputKeyActionPerformed(evt);
-            }
-        });
 
         jLabel2.setText("KeyUrl    : ");
 
         inputUrl.setText("www.shopadima.com");
-        inputUrl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputUrlActionPerformed(evt);
-            }
-        });
 
         checkPeriod.setText("ClickPeriod");
-        checkPeriod.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkPeriodActionPerformed(evt);
-            }
-        });
 
         delayClick.setText("3000");
-        delayClick.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delayClickActionPerformed(evt);
-            }
-        });
 
         checkWait.setText("WaitPeriod");
-        checkWait.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                checkWaitActionPerformed(evt);
-            }
-        });
 
         delayWait.setText("3000");
-        delayWait.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delayWaitActionPerformed(evt);
-            }
-        });
 
         buttonStart.setText("Start");
-        buttonStart.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                buttonStartMouseClicked(evt);
+        buttonStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStartActionPerformed(evt);
             }
         });
 
-        searchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        searchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/search?q=", "https://tw.search.yahoo.com/search?p=", "https://www.bing.com/search?q=" }));
 
         jLabel3.setText("Search Engine   :  ");
 
@@ -114,7 +92,7 @@ public class SeoFrame extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -125,9 +103,9 @@ public class SeoFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inputUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
                     .addComponent(searchEngine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+                .addContainerGap(13, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3)
                     .addComponent(buttonStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -141,7 +119,7 @@ public class SeoFrame extends javax.swing.JFrame {
                         .addComponent(delayWait, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(88, 88, 88))
                     .addComponent(jScrollPane1))
-                .addContainerGap())
+                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -174,43 +152,40 @@ public class SeoFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inputUrlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputUrlActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_inputUrlActionPerformed
+    private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
+        if (!isStart) {
+            textKey = inputKey.getText().trim();
+            textUrl = inputUrl.getText().trim();
+            chkClick = checkPeriod.isEnabled();
+            chkWait = checkWait.isEnabled();
+            numDelayClick = Integer.parseInt(delayClick.getText());
+            numDelayWait = Integer.parseInt(delayWait.getText());
+            
 
-    private void checkPeriodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkPeriodActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkPeriodActionPerformed
+            try {
+                String result = new AnalyUrl().analyUrl(getHtml(textUrl+textKey));
+                
+                
+            } catch (IOException ex) {
+//                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("IOException: "+ex.getMessage());
+            }
+            
 
-    private void delayClickActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayClickActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_delayClickActionPerformed
+        } else {
 
-    private void checkWaitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkWaitActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_checkWaitActionPerformed
+        }
 
-    private void delayWaitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delayWaitActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_delayWaitActionPerformed
 
-    private void inputKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputKeyActionPerformed
+    }//GEN-LAST:event_buttonStartActionPerformed
 
-    }//GEN-LAST:event_inputKeyActionPerformed
+    private String textKey, textUrl;
+    private Boolean isStart, chkClick, chkWait;
+    private int numDelayClick, numDelayWait;
+    private List<String> list = new ArrayList<>();
 
-    private void buttonStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonStartMouseClicked
-       textKey = inputKey.getText();
-       textUrl = inputUrl.getText();
-       chkClick = checkPeriod.isEnabled();
-       chkWait = checkWait.isEnabled();
-       numDelayClick = Integer.parseInt(delayClick.getText());
-       numDelayWait = Integer.parseInt(delayWait.getText());
-    }//GEN-LAST:event_buttonStartMouseClicked
+    private HttpClient client;
 
-    private String textKey,textUrl;
-    private Boolean chkClick,chkWait;
-    private int numDelayClick,numDelayWait;
-    private List<String> list;
     /**
      * @param args the command line arguments
      */
@@ -237,6 +212,7 @@ public class SeoFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(SeoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
