@@ -11,6 +11,8 @@ import static com.adima.seo.util.HttpClientUtil.getHtml;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.httpclient.HttpClient;
@@ -45,11 +47,11 @@ public class SeoFrame extends javax.swing.JFrame {
         delayClick = new javax.swing.JTextField();
         checkWait = new javax.swing.JCheckBox();
         delayWait = new javax.swing.JTextField();
-        buttonStart = new javax.swing.JButton();
+        btnStart = new javax.swing.JButton();
         searchEngine = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,16 +65,16 @@ public class SeoFrame extends javax.swing.JFrame {
 
         checkPeriod.setText("ClickPeriod");
 
-        delayClick.setText("3000");
+        delayClick.setText("5");
 
         checkWait.setText("WaitPeriod");
 
-        delayWait.setText("3000");
+        delayWait.setText("5");
 
-        buttonStart.setText("Start");
-        buttonStart.addActionListener(new java.awt.event.ActionListener() {
+        btnStart.setText("Start");
+        btnStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonStartActionPerformed(evt);
+                btnStartActionPerformed(evt);
             }
         });
 
@@ -80,12 +82,10 @@ public class SeoFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Search Engine   :  ");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(10);
+        jScrollPane2.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -106,19 +106,20 @@ public class SeoFrame extends javax.swing.JFrame {
                 .addContainerGap(15, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(13, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3)
-                    .addComponent(buttonStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(checkPeriod)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delayClick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(checkWait)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delayWait, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(88, 88, 88))
-                    .addComponent(jScrollPane1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel3)
+                        .addComponent(btnStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(checkPeriod)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(delayClick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(checkWait)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(delayWait, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(88, 88, 88))))
                 .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
@@ -143,48 +144,76 @@ public class SeoFrame extends javax.swing.JFrame {
                     .addComponent(checkWait)
                     .addComponent(delayWait, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonStart)
+                .addComponent(btnStart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStartActionPerformed
-        if (!isStart) {
+    private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
+        isStart = true;
+        Timer timer = new Timer();
+        jTextArea1.append("Start\n");
+        if (isStart) {
+            btnStart.setText("Stop");
             textKey = inputKey.getText().trim();
             textUrl = inputUrl.getText().trim();
             chkClick = checkPeriod.isEnabled();
             chkWait = checkWait.isEnabled();
             numDelayClick = Integer.parseInt(delayClick.getText());
             numDelayWait = Integer.parseInt(delayWait.getText());
+            jTextArea1.append("Count down in...\n");
+            temp.append(jTextArea1.toString());
+            timer.schedule(new TimerTask(){
+                @Override
+                public void run() {
+                    jTextArea1.setText(temp.toString());
+                    jTextArea1.append(numDelayClick-- + " sec\n");
+                    if(numDelayClick < 0 )
+                        timer.cancel();
+                }
+            }, 0, 1000 );
+            temp.setLength(0);
             
-
             try {
                 String result = new AnalyUrl().analyUrl(getHtml(textUrl+textKey));
-                
+                jTextArea1.append(result+"\n");
+                jTextArea1.append("Start click in 2sec\n");
+                timer.schedule(new TimerTask(){
+                @Override
+                public void run() {
+                    timer.cancel();
+                    try {
+                        getHtml(result);
+                    } catch (IOException ex) {
+                        System.out.println("Click target IOException: "+ex.getMessage());
+                    }
+                }
+            },0 ,2000 );
                 
             } catch (IOException ex) {
 //                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("IOException: "+ex.getMessage());
+                System.out.println("Click search IOException: "+ex.getMessage());
             }
             
+            isStart = false;
+            btnStart.setText("Start");
 
         } else {
-
+            jTextArea1.append("Start fail\n");
         }
 
 
-    }//GEN-LAST:event_buttonStartActionPerformed
+    }//GEN-LAST:event_btnStartActionPerformed
 
     private String textKey, textUrl;
     private Boolean isStart, chkClick, chkWait;
     private int numDelayClick, numDelayWait;
-    private List<String> list = new ArrayList<>();
+    private StringBuilder temp = new StringBuilder();
 
-    private HttpClient client;
 
     /**
      * @param args the command line arguments
@@ -223,7 +252,7 @@ public class SeoFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonStart;
+    private javax.swing.JButton btnStart;
     private javax.swing.JCheckBox checkPeriod;
     private javax.swing.JCheckBox checkWait;
     private javax.swing.JTextField delayClick;
@@ -233,8 +262,8 @@ public class SeoFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JList<String> jList1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JComboBox<String> searchEngine;
     // End of variables declaration//GEN-END:variables
 }
