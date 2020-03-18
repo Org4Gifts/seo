@@ -48,7 +48,7 @@ public class SeoFrame extends javax.swing.JFrame {
         checkWait = new javax.swing.JCheckBox();
         delayWait = new javax.swing.JTextField();
         btnStart = new javax.swing.JButton();
-        searchEngine = new javax.swing.JComboBox<>();
+        jSearchEngine = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -78,7 +78,7 @@ public class SeoFrame extends javax.swing.JFrame {
             }
         });
 
-        searchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/search?q=", "https://tw.search.yahoo.com/search?p=", "https://www.bing.com/search?q=" }));
+        jSearchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/search?q=", "https://tw.search.yahoo.com/search?p=", "https://www.bing.com/search?q=" }));
 
         jLabel3.setText("Search Engine   :  ");
 
@@ -102,24 +102,23 @@ public class SeoFrame extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(inputUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
-                    .addComponent(searchEngine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSearchEngine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(13, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane2)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel3)
-                        .addComponent(btnStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(checkPeriod)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(delayClick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(checkWait)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(delayWait, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(88, 88, 88))))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnStart, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(checkPeriod)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delayClick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(checkWait)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delayWait, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(88, 88, 88)))
                 .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
@@ -135,7 +134,7 @@ public class SeoFrame extends javax.swing.JFrame {
                     .addComponent(inputUrl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(searchEngine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSearchEngine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -154,66 +153,49 @@ public class SeoFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        isStart = true;
-        Timer timer = new Timer();
-        jTextArea1.append("Start\n");
+        isStart = !isStart;
+        timer = new Timer();
+
         if (isStart) {
+            jTextArea1.append("Start\n");
             btnStart.setText("Stop");
             textKey = inputKey.getText().trim();
             textUrl = inputUrl.getText().trim();
+            searchEngine = jSearchEngine.getSelectedItem().toString();
             chkClick = checkPeriod.isEnabled();
             chkWait = checkWait.isEnabled();
             numDelayClick = Integer.parseInt(delayClick.getText());
             numDelayWait = Integer.parseInt(delayWait.getText());
             jTextArea1.append("Count down in...\n");
-            temp.append(jTextArea1.toString());
-            timer.schedule(new TimerTask(){
+            temp.append(jTextArea1.getText());
+            timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     jTextArea1.setText(temp.toString());
                     jTextArea1.append(numDelayClick-- + " sec\n");
-                    if(numDelayClick < 0 )
+                    if (numDelayClick < 0) {
                         timer.cancel();
-                }
-            }, 0, 1000 );
-            temp.setLength(0);
-            
-            try {
-                String result = new AnalyUrl().analyUrl(getHtml(textUrl+textKey));
-                jTextArea1.append(result+"\n");
-                jTextArea1.append("Start click in 2sec\n");
-                timer.schedule(new TimerTask(){
-                @Override
-                public void run() {
-                    timer.cancel();
-                    try {
-                        getHtml(result);
-                    } catch (IOException ex) {
-                        System.out.println("Click target IOException: "+ex.getMessage());
+                        connect = true;
+                        startConnect();
                     }
                 }
-            },0 ,2000 );
-                
-            } catch (IOException ex) {
-//                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("Click search IOException: "+ex.getMessage());
-            }
+            }, 0, 1000);
             
-            isStart = false;
-            btnStart.setText("Start");
 
         } else {
-            jTextArea1.append("Start fail\n");
+            btnStart.setText("Start");
+            jTextArea1.append("Stop\n");
         }
 
 
     }//GEN-LAST:event_btnStartActionPerformed
 
-    private String textKey, textUrl;
-    private Boolean isStart, chkClick, chkWait;
+    private String textKey, textUrl, searchEngine;
+    private Boolean isStart = false, chkClick = false, chkWait = false, connect = false;
     private int numDelayClick, numDelayWait;
     private StringBuilder temp = new StringBuilder();
-
+    
+    private static Timer timer;
 
     /**
      * @param args the command line arguments
@@ -241,7 +223,7 @@ public class SeoFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(SeoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -249,6 +231,43 @@ public class SeoFrame extends javax.swing.JFrame {
                 new SeoFrame().setVisible(true);
             }
         });
+    }
+    
+    void startConnect(){
+        if (connect) {
+                temp.setLength(0);
+//                System.out.println("textUrl: " + textUrl + " textKey: " + textKey);
+                timer = new Timer();
+                try {
+                    String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey),textUrl);
+                    jTextArea1.append("Search finish.\n");
+                    jTextArea1.append("Start click in 2sec\n");
+                    
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            try {
+                                getHtml(resultUrl);
+                                jTextArea1.append("Open URL finish\n");
+                                connect = false;
+
+                                isStart = false;
+                                btnStart.setText("Start");
+                                timer.cancel();
+                            } catch (IOException ex) {
+                                System.out.println("Click target IOException: " + ex.getMessage());
+                                jTextArea1.append("Get html has IOException\n");
+                            }
+                            
+                            
+                        }
+                    }, 0, 2000);
+
+                } catch (IOException ex) {
+//                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println("Click search IOException: " + ex.getMessage());
+                }
+            }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -263,7 +282,7 @@ public class SeoFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JComboBox<String> jSearchEngine;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JComboBox<String> searchEngine;
     // End of variables declaration//GEN-END:variables
 }

@@ -9,15 +9,14 @@ import java.util.StringTokenizer;
 
 /**
  *
- * @author odise
- * https://jjnnykimo.pixnet.net/blog/post/21585194
+ * @author odise https://jjnnykimo.pixnet.net/blog/post/21585194
  */
 public class AnalyUrl {
 
-    public String analyUrl(String totalstring) {
+    public String analyUrl(String totalstring, String keyUrl) {
         StringTokenizer token = new StringTokenizer(totalstring, "<> ");
 
-String firstword;
+        String firstword;
 
         CompareStr compstr = new CompareStr();
 
@@ -32,8 +31,10 @@ String firstword;
                 if (firstword.length() > 14 && firstword.contains("https")) {
                     dsturl = firstword.substring(13, firstword.length() - 1);
                     System.out.println(dsturl); //成功取到URL，記錄到文件中
-                    if(dsturl.contains("www.shopadima.com"))
+//                    if (dsturl.contains("www.shopadima.com")) {
+                    if (dsturl.contains(keyUrl)) {
                         return dsturl;
+                    }
                 }
             }
         }

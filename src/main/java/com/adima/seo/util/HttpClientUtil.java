@@ -73,11 +73,12 @@ public class HttpClientUtil {
   
   public static void main(String[] args) throws HttpException, IOException {  
 //    String url = "http://blog.csdn.net/xmlrequest/article/details/11519503";  
-    String keyUrl = "https://www.google.com.tw/search?q=";
+    String engine = "https://www.google.com.tw/search?q=";
     String keyWord = "adima";
+    String keyUrl = "www.shopadima.com";
 //    String url = "http://www.google.com.tw/search?q=adima"; 
 //    System.out.println(getHtml(url)); 
-    String newUrl = new AnalyUrl().analyUrl(getHtml(keyUrl+keyWord));
+    String newUrl = new AnalyUrl().analyUrl(getHtml(engine+keyWord),keyUrl);
     
         System.out.println(getHtml(newUrl)); 
   }  
