@@ -154,9 +154,8 @@ public class SeoFrame extends javax.swing.JFrame {
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
         isStart = !isStart;
-        timer = new Timer();
-
         if (isStart) {
+            timer = new Timer();
             jTextArea1.append("Start\n");
             btnStart.setText("Stop");
             textKey = inputKey.getText().trim();
@@ -180,9 +179,9 @@ public class SeoFrame extends javax.swing.JFrame {
                     }
                 }
             }, 0, 1000);
-            
 
         } else {
+            timer.cancel();
             btnStart.setText("Start");
             jTextArea1.append("Stop\n");
         }
@@ -192,9 +191,9 @@ public class SeoFrame extends javax.swing.JFrame {
 
     private String textKey, textUrl, searchEngine;
     private Boolean isStart = false, chkClick = false, chkWait = false, connect = false;
-    private int numDelayClick, numDelayWait;
+    private int numDelayClick = 2, numDelayWait = 2;
     private StringBuilder temp = new StringBuilder();
-    
+
     private static Timer timer;
 
     /**
@@ -232,42 +231,84 @@ public class SeoFrame extends javax.swing.JFrame {
             }
         });
     }
-    
-    void startConnect(){
-        if (connect) {
-                temp.setLength(0);
-//                System.out.println("textUrl: " + textUrl + " textKey: " + textKey);
-                timer = new Timer();
-                try {
-                    String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey),textUrl);
-                    jTextArea1.append("Search finish.\n");
-                    jTextArea1.append("Start click in 2sec\n");
-                    
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            try {
-                                getHtml(resultUrl);
-                                jTextArea1.append("Open URL finish\n");
-                                connect = false;
 
+    void startConnect() {
+        if (connect) {
+            temp.setLength(0);
+//                System.out.println("textUrl: " + textUrl + " textKey: " + textKey);
+            timer = new Timer();
+            try {
+                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), textUrl);
+                jTextArea1.append("Search finish.\n");
+                jTextArea1.append("Start click in " + numDelayWait + " sec\n");
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            getHtml(resultUrl);
+                            jTextArea1.append("Open URL finish\n");
+                            timer.cancel();
+                            if (chkWait) {
+                                jTextArea1.append("Restart in " + numDelayWait + " sec\n");
+                                restartConnect();
+                            } else {
+                                connect = false;
                                 isStart = false;
                                 btnStart.setText("Start");
-                                timer.cancel();
-                            } catch (IOException ex) {
-                                System.out.println("Click target IOException: " + ex.getMessage());
-                                jTextArea1.append("Get html has IOException\n");
                             }
-                            
-                            
+                        } catch (IOException ex) {
+                            System.out.println("Click target IOException: " + ex.getMessage());
+                            jTextArea1.append("Get html has IOException\n");
                         }
-                    }, 0, 2000);
+                        connect = false;
+                    }
+                }, 1000 * numDelayWait , 1000 * numDelayWait);
 
-                } catch (IOException ex) {
+            } catch (IOException ex) {
 //                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println("Click search IOException: " + ex.getMessage());
-                }
+                System.out.println("Click search IOException: " + ex.getMessage());
             }
+        }
+    }
+
+    void restartConnect() {
+        if (connect) {
+            temp.setLength(0);
+            timer = new Timer();
+            try {
+                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), textUrl);
+                jTextArea1.append("Search finish.\n");
+                jTextArea1.append("Start click in " + numDelayWait + " sec\n");
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        try {
+                            getHtml(resultUrl);
+                            jTextArea1.append("Open URL finish\n");
+                            timer.cancel();
+                            if (chkWait) {
+                                jTextArea1.append("Restart in " + numDelayWait + " sec\n");
+                                startConnect();
+                            } else {
+                                connect = false;
+                                isStart = false;
+                                btnStart.setText("Start");
+                            }
+                        } catch (IOException ex) {
+                            System.out.println("Click target IOException: " + ex.getMessage());
+                            jTextArea1.append("Get html has IOException\n");
+                        }
+                        connect = false;
+                    }
+                }, 1000 * numDelayWait, 1000 * numDelayWait);
+
+            } catch (IOException ex) {
+//                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Click search IOException: " + ex.getMessage());
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
