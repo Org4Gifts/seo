@@ -175,7 +175,8 @@ public class SeoFrame extends javax.swing.JFrame {
                     if (numDelayClick < 0) {
                         timer.cancel();
                         connect = true;
-                        startConnect();
+//                        startConnect();
+                        startConnect2();
                     }
                 }
             }, 0, 1000);
@@ -184,6 +185,7 @@ public class SeoFrame extends javax.swing.JFrame {
             timer.cancel();
             btnStart.setText("Start");
             jTextArea1.append("Stop\n");
+            connect = false;
         }
 
 
@@ -232,6 +234,58 @@ public class SeoFrame extends javax.swing.JFrame {
         });
     }
 
+    void startConnect2() {
+        temp.setLength(0);
+        Thread thread = null;
+        if (connect) {
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+//                        if (isStart) {
+                            String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), textUrl);
+                            jTextArea1.append("Search finish.\n");
+                            jTextArea1.append("Start click in " + numDelayWait + " sec\n");
+
+                            Thread.sleep(1000 * numDelayWait);
+                            
+                            getHtml(resultUrl);
+                            jTextArea1.append("Open URL finish\n");
+                            if (chkWait) {
+                                jTextArea1.append("Wait " + numDelayWait + " sec to restart\n");
+                            } else {
+                                jTextArea1.append("Finish click\n");
+                                connect = false;
+                                isStart = false;
+                                btnStart.setText("Start");
+                            }
+                            
+//                        } else {
+//
+//                        }
+
+                    } catch (InterruptedException ex) {
+//                    Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Click target InterruptedException: " + ex.getMessage());
+                        jTextArea1.append("Get html Stop\n");
+                    } catch (IOException ex) {
+                        Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+
+                        System.out.println("Click target IOException: " + ex.getMessage());
+                        jTextArea1.append("Get html has IOException\n");
+                    }
+                }
+
+            });
+        } else {
+            if (thread != null) {
+                thread.interrupt();
+            }
+        }
+    }
+
     void startConnect() {
         if (connect) {
             temp.setLength(0);
@@ -248,11 +302,12 @@ public class SeoFrame extends javax.swing.JFrame {
                         try {
                             getHtml(resultUrl);
                             jTextArea1.append("Open URL finish\n");
-                            timer.cancel();
+//                            timer.cancel();
                             if (chkWait) {
                                 jTextArea1.append("Restart in " + numDelayWait + " sec\n");
                                 restartConnect();
                             } else {
+                                timer.cancel();
                                 connect = false;
                                 isStart = false;
                                 btnStart.setText("Start");
@@ -263,7 +318,7 @@ public class SeoFrame extends javax.swing.JFrame {
                         }
                         connect = false;
                     }
-                }, 1000 * numDelayWait , 1000 * numDelayWait);
+                }, 1000 * numDelayWait, 1000 * numDelayWait);
 
             } catch (IOException ex) {
 //                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
