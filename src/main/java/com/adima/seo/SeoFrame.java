@@ -6,16 +6,12 @@
 package com.adima.seo;
 
 import com.adima.seo.util.AnalyUrl;
-import com.adima.seo.util.HttpClientUtil;
 import static com.adima.seo.util.HttpClientUtil.getHtml;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.httpclient.HttpClient;
 
 /**
  *
@@ -159,19 +155,23 @@ public class SeoFrame extends javax.swing.JFrame {
             jTextArea1.append("Start\n");
             btnStart.setText("Stop");
             textKey = inputKey.getText().trim();
-            textUrl = inputUrl.getText().trim();
+            keyUrl = inputUrl.getText().trim();
             searchEngine = jSearchEngine.getSelectedItem().toString();
-            chkClick = checkPeriod.isEnabled();
-            chkWait = checkWait.isEnabled();
-            numDelayClick = Integer.parseInt(delayClick.getText());
-            numDelayWait = Integer.parseInt(delayWait.getText());
+            chkClick = checkPeriod.isSelected();
+            chkWait = checkWait.isSelected();
+            if (chkClick) {
+                numDelayClick = Integer.parseInt(delayClick.getText());
+            }
+            if (chkWait) {
+                numDelayWait = Integer.parseInt(delayWait.getText());
+            }
             jTextArea1.append("Count down in...\n");
             temp.append(jTextArea1.getText());
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     jTextArea1.setText(temp.toString());
-                    jTextArea1.append(numDelayClick-- + " sec\n");
+                    jTextArea1.append(numDelayClick-- + " sec...\n");
                     if (numDelayClick < 0) {
                         timer.cancel();
                         connect = true;
@@ -183,17 +183,18 @@ public class SeoFrame extends javax.swing.JFrame {
 
         } else {
             timer.cancel();
-            btnStart.setText("Start");
-            jTextArea1.append("Stop\n");
+//            btnStart.setText("Start");
+            btnStart.setEnabled(false);
+            jTextArea1.append("Stoping...\n");
             connect = false;
         }
 
 
     }//GEN-LAST:event_btnStartActionPerformed
 
-    private String textKey, textUrl, searchEngine;
+    private String textKey, keyUrl, searchEngine;
     private Boolean isStart = false, chkClick = false, chkWait = false, connect = false;
-    private int numDelayClick = 2, numDelayWait = 2;
+    private int numDelayClick = 1, numDelayWait = 1;
     private StringBuilder temp = new StringBuilder();
 
     private static Timer timer;
@@ -245,27 +246,41 @@ public class SeoFrame extends javax.swing.JFrame {
                         //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
 //                        if (isStart) {
-                            String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), textUrl);
+                        while (isStart) {
+                            String resultUrl = getHtml(searchEngine + textKey);
+//                            System.out.println("resultUrl: "+resultUrl);
+                            String matchUrl = new AnalyUrl().analyUrl(resultUrl, keyUrl);
                             jTextArea1.append("Search finish.\n");
-                            jTextArea1.append("Start click in " + numDelayWait + " sec\n");
+                            jTextArea1.append("Start click in " + numDelayWait + " sec...\n");
 
                             Thread.sleep(1000 * numDelayWait);
-                            
-                            getHtml(resultUrl);
-                            jTextArea1.append("Open URL finish\n");
+
+                            getHtml(matchUrl);
+                            jTextArea1.append("Open URL finish.\n");
                             if (chkWait) {
-                                jTextArea1.append("Wait " + numDelayWait + " sec to restart\n");
+                                jTextArea1.append("Wait " + numDelayWait + " sec to restart...\n");
                             } else {
-                                jTextArea1.append("Finish click\n");
+                                jTextArea1.append("Finish click.\n");
                                 connect = false;
                                 isStart = false;
                                 btnStart.setText("Start");
+
+                                if (chkClick) {
+                                    numDelayClick = Integer.parseInt(delayClick.getText());
+                                } else {
+                                    numDelayClick = 1;
+                                }
                             }
-                            
+                        }
+
+                        jTextArea1.append("Stopped.\n");
+                        btnStart.setText("Start");
+//                      thread.interrupt();
+                        btnStart.setEnabled(true);
+
 //                        } else {
 //
 //                        }
-
                     } catch (InterruptedException ex) {
 //                    Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Click target InterruptedException: " + ex.getMessage());
@@ -279,9 +294,15 @@ public class SeoFrame extends javax.swing.JFrame {
                 }
 
             });
+
+            thread.start();
+
         } else {
             if (thread != null) {
+                jTextArea1.append("Stop \n");
+                btnStart.setText("Start");
                 thread.interrupt();
+                btnStart.setEnabled(true);
             }
         }
     }
@@ -292,7 +313,7 @@ public class SeoFrame extends javax.swing.JFrame {
 //                System.out.println("textUrl: " + textUrl + " textKey: " + textKey);
             timer = new Timer();
             try {
-                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), textUrl);
+                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), keyUrl);
                 jTextArea1.append("Search finish.\n");
                 jTextArea1.append("Start click in " + numDelayWait + " sec\n");
 
@@ -332,7 +353,7 @@ public class SeoFrame extends javax.swing.JFrame {
             temp.setLength(0);
             timer = new Timer();
             try {
-                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), textUrl);
+                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), keyUrl);
                 jTextArea1.append("Search finish.\n");
                 jTextArea1.append("Start click in " + numDelayWait + " sec\n");
 
