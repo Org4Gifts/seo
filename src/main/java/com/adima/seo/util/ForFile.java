@@ -3,10 +3,12 @@ package com.adima.seo.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.UUID;
 
 /**
@@ -29,9 +31,6 @@ public class ForFile {
      * @return 是否建立成功，成功則返回true
      */
     public static boolean createFile(String fileName, String filecontent) {
-        if(getOperatingSystem().equals("Mac OS X"))
-            path = "/Users/odise/workspace/";
-            
         Boolean bool = false;
         filenameTemp = path + fileName + ".txt";//檔案路徑 名稱 檔案型別
         File file = new File(filenameTemp);
@@ -111,6 +110,29 @@ public class ForFile {
     }
 
     /**
+     * 讀取檔案
+     *
+     * @param fileName 檔名稱
+     * https://www.w3schools.com/java/java_files_read.asp
+     */
+    public static void readFile(String fileName) {
+        Boolean bool = false;
+        filenameTemp = path + fileName + ".txt";
+        try {
+            File myObj = new File(filenameTemp);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                System.out.println(data);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 刪除檔案
      *
      * @param fileName 檔名稱
@@ -132,14 +154,20 @@ public class ForFile {
     }
 
     public static void main(String[] args) {
-        UUID uuid = UUID.randomUUID();
-        createFile(uuid + "myfile", "我的夢說別停留等待,就讓光芒折射淚溼的瞳孔,映出心中最想擁有的彩虹,帶我奔向那片有你的天空,因為你是我的夢 我的夢");
-        System.out.println("os: "+getOperatingSystem());
+        if (getOperatingSystem().equals("Mac OS X")) {
+            path = "/Users/odise/workspace/";
+        }
+        String attr = "keyWd:adima;\nkeyUrl:www.shopadima.com;\nchkPeroid:5;\nchkWait:5;";
+//        UUID uuid = UUID.randomUUID();
+//        createFile(uuid + "myfile", "我的夢說別停留等待,就讓光芒折射淚溼的瞳孔,映出心中最想擁有的彩虹,帶我奔向那片有你的天空,因為你是我的夢 我的夢");
+//        createFile(uuid + "myfile", "");
+        //e40b26d3-5a3a-48fd-bf8e-82632cc2ecfbmyfile
+        readFile("e40b26d3-5a3a-48fd-bf8e-82632cc2ecfbmyfile");
     }
-    
+
     public static String getOperatingSystem() {
-    String os = System.getProperty("os.name");
-    // System.out.println("Using System Property: " + os);
-    return os;
-}
+        String os = System.getProperty("os.name");
+        // System.out.println("Using System Property: " + os);
+        return os;
+    }
 }
