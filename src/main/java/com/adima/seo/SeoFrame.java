@@ -246,13 +246,10 @@ public class SeoFrame extends javax.swing.JFrame {
                 @Override
                 public void run() {
                     try {
-                        //                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-//                        if (isStart) {
                         while (isStart) {
                             String resultUrl = getHtml(searchEngine + textKey);
 //                            System.out.println("resultUrl: "+resultUrl);
-                            String matchUrl = new AnalyUrl().analyUrl(resultUrl, keyUrl);
+                            String matchUrl = new AnalyUrl().analyUrl(resultUrl, keyUrl, textKey);
                             jTextArea1.append("Search finish.\n");
                             jTextArea1.append("Start click in " + numDelayWait + " sec...\n");
 
@@ -278,12 +275,8 @@ public class SeoFrame extends javax.swing.JFrame {
 
                         jTextArea1.append("Stopped.\n");
                         btnStart.setText("Start");
-//                      thread.interrupt();
                         btnStart.setEnabled(true);
 
-//                        } else {
-//
-//                        }
                     } catch (InterruptedException ex) {
 //                    Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Click target InterruptedException: " + ex.getMessage());
@@ -306,86 +299,6 @@ public class SeoFrame extends javax.swing.JFrame {
                 btnStart.setText("Start");
                 thread.interrupt();
                 btnStart.setEnabled(true);
-            }
-        }
-    }
-
-    void startConnect() {
-        if (connect) {
-            temp.setLength(0);
-//                System.out.println("textUrl: " + textUrl + " textKey: " + textKey);
-            timer = new Timer();
-            try {
-                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), keyUrl);
-                jTextArea1.append("Search finish.\n");
-                jTextArea1.append("Start click in " + numDelayWait + " sec\n");
-
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            getHtml(resultUrl);
-                            jTextArea1.append("Open URL finish\n");
-//                            timer.cancel();
-                            if (chkWait) {
-                                jTextArea1.append("Restart in " + numDelayWait + " sec\n");
-                                restartConnect();
-                            } else {
-                                timer.cancel();
-                                connect = false;
-                                isStart = false;
-                                btnStart.setText("Start");
-                            }
-                        } catch (IOException ex) {
-                            System.out.println("Click target IOException: " + ex.getMessage());
-                            jTextArea1.append("Get html has IOException\n");
-                        }
-                        connect = false;
-                    }
-                }, 1000 * numDelayWait, 1000 * numDelayWait);
-
-            } catch (IOException ex) {
-//                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("Click search IOException: " + ex.getMessage());
-            }
-        }
-    }
-
-    void restartConnect() {
-        if (connect) {
-            temp.setLength(0);
-            timer = new Timer();
-            try {
-                String resultUrl = new AnalyUrl().analyUrl(getHtml(searchEngine + textKey), keyUrl);
-                jTextArea1.append("Search finish.\n");
-                jTextArea1.append("Start click in " + numDelayWait + " sec\n");
-
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            getHtml(resultUrl);
-                            jTextArea1.append("Open URL finish\n");
-                            timer.cancel();
-                            if (chkWait) {
-                                jTextArea1.append("Restart in " + numDelayWait + " sec\n");
-                                startConnect();
-                            } else {
-                                connect = false;
-                                isStart = false;
-                                btnStart.setText("Start");
-                            }
-                        } catch (IOException ex) {
-                            System.out.println("Click target IOException: " + ex.getMessage());
-                            jTextArea1.append("Get html has IOException\n");
-                        }
-                        connect = false;
-                    }
-                }, 1000 * numDelayWait, 1000 * numDelayWait);
-
-            } catch (IOException ex) {
-//                Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
-                System.out.println("Click search IOException: " + ex.getMessage());
             }
         }
     }

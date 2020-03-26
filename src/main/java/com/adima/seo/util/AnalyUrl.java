@@ -13,7 +13,7 @@ import java.util.StringTokenizer;
  */
 public class AnalyUrl {
 
-    public String analyUrl(String totalstring, String keyUrl) {
+    public String analyUrl(String totalstring, String keyUrl, String keyWd) {
         StringTokenizer token = new StringTokenizer(totalstring, "<> ");
 
         String firstword;
@@ -38,6 +38,8 @@ public class AnalyUrl {
                 }
             }
         }
+        
+        
         return "error";
     }
 }
