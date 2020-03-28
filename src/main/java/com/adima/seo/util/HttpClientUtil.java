@@ -69,7 +69,7 @@ public class HttpClientUtil {
         if (encoding == null) {
             encoding = "GBK";
         }
-
+//        ForFile.writeFileContent("", method.getResponseBodyAsString());
         rest = new String(method.getResponseBody(), encoding);
         method.releaseConnection();
         return rest;
@@ -86,7 +86,15 @@ public class HttpClientUtil {
 //        String newUrl = new AnalyUrl().analyUrl(getHtml(engine + keyWord), keyUrl, keyWord);
 //        System.out.println(getHtml(newUrl));
 
-            //寫入搜尋結果
+        String htmlResult = getHtml(engine + keyWord);
+//        ForFile.writeFileContent("", htmlResult);
+//
+//        String newUrl = new AnalyUrl().analyUrl(htmlResult, keyUrl, keyWord);
+//        
+//        ForFile.writeFileContent("", newUrl);
+//        
+//        ForFile.writeFileContent("", getHtml(newUrl));
+        //寫入搜尋結果
 //          ForFile.writeFileContent("", getHtml(engine + keyWord));
     }
 }
