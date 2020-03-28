@@ -8,6 +8,9 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowOpened" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowOpened"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -47,13 +50,13 @@
                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="btnStart" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="checkPeriod" min="-2" max="-2" attributes="0"/>
+                      <Component id="jChkClickPeriod" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="delayClick" min="-2" pref="60" max="-2" attributes="0"/>
+                      <Component id="jNumDelayClick" min="-2" pref="60" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="checkWait" min="-2" max="-2" attributes="0"/>
+                      <Component id="jChkWaitPeriod" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="delayWait" min="-2" pref="60" max="-2" attributes="0"/>
+                      <Component id="jNumDelayWait" min="-2" pref="60" max="-2" attributes="0"/>
                       <EmptySpace min="88" pref="88" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -81,10 +84,10 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="checkPeriod" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="delayClick" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="checkWait" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="delayWait" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jChkClickPeriod" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jNumDelayClick" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jChkWaitPeriod" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jNumDelayWait" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnStart" min="-2" max="-2" attributes="0"/>
@@ -116,22 +119,22 @@
         <Property name="text" type="java.lang.String" value="www.shopadima.com"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="checkPeriod">
+    <Component class="javax.swing.JCheckBox" name="jChkClickPeriod">
       <Properties>
         <Property name="text" type="java.lang.String" value="ClickPeriod"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="delayClick">
+    <Component class="javax.swing.JTextField" name="jNumDelayClick">
       <Properties>
         <Property name="text" type="java.lang.String" value="5"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="checkWait">
+    <Component class="javax.swing.JCheckBox" name="jChkWaitPeriod">
       <Properties>
         <Property name="text" type="java.lang.String" value="WaitPeriod"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="delayWait">
+    <Component class="javax.swing.JTextField" name="jNumDelayWait">
       <Properties>
         <Property name="text" type="java.lang.String" value="5"/>
       </Properties>

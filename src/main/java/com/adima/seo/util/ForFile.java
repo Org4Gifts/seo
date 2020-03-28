@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -21,7 +23,15 @@ public class ForFile {
 
     private static String path = "D:\\file\\";
 //檔案路徑 名稱
-    private static String filenameTemp;
+    private static String filenameTemp = "settings.config";
+    private static String defaultContent
+            = "keyText:adima\n"
+            + "keyUrl:www.shopadima.com\n"
+            + "searchEngine:0\n"
+            + "chkClickPeroid:false\n"
+            + "numDelayClick:5\n"
+            + "chkClickWait:true\n"
+            + "numDelayWait:5\n";
 
     /**
      * 建立檔案
@@ -33,7 +43,7 @@ public class ForFile {
     public static boolean createFile(String fileName, String filecontent) {
         Boolean bool = false;
 //        filenameTemp = path + fileName + ".config";//檔案路徑 名稱 檔案型別
-        filenameTemp = fileName+".config";
+//        filenameTemp = fileName+".config";
 
         File file = new File(filenameTemp);
         try {
@@ -42,9 +52,9 @@ public class ForFile {
                 file.createNewFile();
                 bool = true;
                 System.out.println("success create file,the file is " + filenameTemp);
-                System.out.println("path: "+file.getAbsolutePath());
+                System.out.println("path: " + file.getAbsolutePath());
 //建立檔案成功後，寫入內容到檔案裡
-                writeFileContent(filenameTemp, filecontent);
+                writeFileContent(filenameTemp, defaultContent);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,18 +80,19 @@ public class ForFile {
         FileOutputStream fos = null;
         PrintWriter pw = null;
         try {
-            File file = new File(filepath);//檔案路徑(包括檔名稱)
+            File file = new File(filenameTemp);//檔案路徑(包括檔名稱)
 //將檔案讀入輸入流
             fis = new FileInputStream(file);
             isr = new InputStreamReader(fis);
             br = new BufferedReader(isr);
             StringBuffer buffer = new StringBuffer();
-//檔案原有內容
-            for (int i = 0; (temp = br.readLine()) != null; i++) {
-                buffer.append(temp);
-// 行與行之間的分隔符 相當於“\n”
-                buffer = buffer.append(System.getProperty("line.separator"));
-            }
+
+////檔案原有內容
+//            for (int i = 0; (temp = br.readLine()) != null; i++) {
+//                buffer.append(temp);
+//// 行與行之間的分隔符 相當於“\n”
+//                buffer = buffer.append(System.getProperty("line.separator"));
+//            }
             buffer.append(filein);
             fos = new FileOutputStream(file);
             pw = new PrintWriter(fos);
@@ -115,24 +126,29 @@ public class ForFile {
     /**
      * 讀取檔案
      *
-     * @param fileName 檔名稱
-     * https://www.w3schools.com/java/java_files_read.asp
+     * @param fileName 檔名稱 https://www.w3schools.com/java/java_files_read.asp
      */
-    public static void readFile(String fileName) {
+    public static Map readFile(String fileName) {
         Boolean bool = false;
 //        filenameTemp = path + fileName + ".config";
+        Map<String, String> map = new HashMap();
+
         try {
             File myObj = new File(filenameTemp);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
-                System.out.println(data);
+                System.out.println("data: " + data);
+                if (data.length() > 0) {
+                    map.put(data.split(":")[0], data.split(":")[1]);
+                }
             }
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+        return map;
     }
 
     /**
@@ -160,18 +176,16 @@ public class ForFile {
         if (getOperatingSystem().equals("Mac OS X")) {
             path = "/Users/odise/workspace/";
         }
-        String attr = "keyWd:adima;\nkeyUrl:www.shopadima.com;\nchkPeroid:5;\nchkWait:5;";
-        
+        String attr = "keyWd:adima\nkeyUrl:www.shopadima.com\nchkPeroid:5\nchkWait:5";
+
 //        UUID uuid = UUID.randomUUID();
 //        createFile(uuid + "myfile", "我的夢說別停留等待,就讓光芒折射淚溼的瞳孔,映出心中最想擁有的彩虹,帶我奔向那片有你的天空,因為你是我的夢 我的夢");
 //        createFile(uuid + "myfile", "");
-
 //        writeFileContent(path + "settings" + ".config",attr);
 //        readFile("settings");
-
-        createFile("settings",attr);
+        createFile("settings", attr);
         readFile("");
-        
+
     }
 
     public static String getOperatingSystem() {
