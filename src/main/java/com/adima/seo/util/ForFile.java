@@ -32,7 +32,9 @@ public class ForFile {
      */
     public static boolean createFile(String fileName, String filecontent) {
         Boolean bool = false;
-        filenameTemp = path + fileName + ".txt";//檔案路徑 名稱 檔案型別
+//        filenameTemp = path + fileName + ".config";//檔案路徑 名稱 檔案型別
+        filenameTemp = fileName+".config";
+
         File file = new File(filenameTemp);
         try {
 //如果檔案不存在，則建立新的檔案
@@ -40,6 +42,7 @@ public class ForFile {
                 file.createNewFile();
                 bool = true;
                 System.out.println("success create file,the file is " + filenameTemp);
+                System.out.println("path: "+file.getAbsolutePath());
 //建立檔案成功後，寫入內容到檔案裡
                 writeFileContent(filenameTemp, filecontent);
             }
@@ -117,7 +120,7 @@ public class ForFile {
      */
     public static void readFile(String fileName) {
         Boolean bool = false;
-        filenameTemp = path + fileName + ".txt";
+//        filenameTemp = path + fileName + ".config";
         try {
             File myObj = new File(filenameTemp);
             Scanner myReader = new Scanner(myObj);
@@ -140,7 +143,7 @@ public class ForFile {
      */
     public static boolean delFile(String fileName) {
         Boolean bool = false;
-        filenameTemp = path + fileName + ".txt";
+//        filenameTemp = path + fileName + ".config";
         File file = new File(filenameTemp);
         try {
             if (file.exists()) {
@@ -153,16 +156,22 @@ public class ForFile {
         return bool;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         if (getOperatingSystem().equals("Mac OS X")) {
             path = "/Users/odise/workspace/";
         }
         String attr = "keyWd:adima;\nkeyUrl:www.shopadima.com;\nchkPeroid:5;\nchkWait:5;";
+        
 //        UUID uuid = UUID.randomUUID();
 //        createFile(uuid + "myfile", "我的夢說別停留等待,就讓光芒折射淚溼的瞳孔,映出心中最想擁有的彩虹,帶我奔向那片有你的天空,因為你是我的夢 我的夢");
 //        createFile(uuid + "myfile", "");
-        //e40b26d3-5a3a-48fd-bf8e-82632cc2ecfbmyfile
-        readFile("e40b26d3-5a3a-48fd-bf8e-82632cc2ecfbmyfile");
+
+//        writeFileContent(path + "settings" + ".config",attr);
+//        readFile("settings");
+
+        createFile("settings",attr);
+        readFile("");
+        
     }
 
     public static String getOperatingSystem() {
