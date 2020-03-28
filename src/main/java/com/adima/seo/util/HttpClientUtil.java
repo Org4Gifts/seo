@@ -82,9 +82,11 @@ public class HttpClientUtil {
         String keyUrl = "www.shopadimas.com";
 //    String url = "http://www.google.com.tw/search?q=adima"; 
 //    System.out.println(getHtml(url)); 
-        System.out.println(getHtml(engine + keyWord));
+//        System.out.println(getHtml(engine + keyWord));
 //        String newUrl = new AnalyUrl().analyUrl(getHtml(engine + keyWord), keyUrl, keyWord);
-
 //        System.out.println(getHtml(newUrl));
+
+            //寫入搜尋結果
+//          ForFile.writeFileContent("", getHtml(engine + keyWord));
     }
 }

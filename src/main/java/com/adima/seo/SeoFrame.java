@@ -59,23 +59,23 @@ public class SeoFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("KeyWord : ");
+        jLabel1.setText("關鍵字     : ");
 
         inputKey.setText("adima");
 
-        jLabel2.setText("KeyUrl    : ");
+        jLabel2.setText("目標網址 : ");
 
         inputUrl.setText("www.shopadima.com");
 
-        jChkClickPeriod.setText("ClickPeriod");
+        jChkClickPeriod.setText("點擊倒數");
 
         jNumDelayClick.setText("5");
 
-        jChkWaitPeriod.setText("WaitPeriod");
+        jChkWaitPeriod.setText("重啟倒數");
 
         jNumDelayWait.setText("5");
 
-        btnStart.setText("Start");
+        btnStart.setText("開始");
         btnStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStartActionPerformed(evt);
@@ -84,7 +84,7 @@ public class SeoFrame extends javax.swing.JFrame {
 
         jSearchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/search?q=", "https://tw.search.yahoo.com/search?p=", "https://www.bing.com/search?q=" }));
 
-        jLabel3.setText("Search Engine   :  ");
+        jLabel3.setText("搜尋引擎   :  ");
 
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
@@ -99,32 +99,34 @@ public class SeoFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inputKey))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inputUrl, javax.swing.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE))
-                    .addComponent(jSearchEngine, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnStart, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inputKey))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inputUrl))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jSearchEngine, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
                         .addComponent(jChkClickPeriod)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jNumDelayClick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jChkWaitPeriod)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jNumDelayWait, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(88, 88, 88)))
+                        .addGap(46, 46, 46)))
                 .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
@@ -162,8 +164,8 @@ public class SeoFrame extends javax.swing.JFrame {
         isStart = !isStart;
         if (isStart) {
             timer = new Timer();
-            jTextArea1.append("Start\n");
-            btnStart.setText("Stop");
+            jTextArea1.append("準備開始搜尋作業\n");
+            btnStart.setText("停止");
             keyText = inputKey.getText().trim();
             keyUrl = inputUrl.getText().trim();
             searchEngine = jSearchEngine.getSelectedItem().toString();
@@ -174,7 +176,7 @@ public class SeoFrame extends javax.swing.JFrame {
                     numDelayClick = Integer.parseInt(jNumDelayClick.getText());
                     map.put("numDelayClick", numDelayClick + "");
                 } catch (NumberFormatException e) {
-                    jTextArea1.append("Wrong clickPeriod number.\n");
+                    jTextArea1.append("點擊倒數數字轉換錯誤.\n");
                     numError = true;
                 }
             } else {
@@ -186,7 +188,7 @@ public class SeoFrame extends javax.swing.JFrame {
                     numDelayWait = Integer.parseInt(jNumDelayWait.getText());
                     map.put("numDelayWait", numDelayWait + "");
                 } catch (NumberFormatException e) {
-                    jTextArea1.append("Wrong waitPeriod number.\n");
+                    jTextArea1.append("迴圈倒數數字轉換錯誤.\n");
                     numError = true;
                 }
             }
@@ -198,13 +200,13 @@ public class SeoFrame extends javax.swing.JFrame {
             map.put("chkClickWait", chkWaitPeriod.toString());
 
             if (!numError) {
-                jTextArea1.append("Count down in...\n");
+                jTextArea1.append("即將於...\n");
                 temp.append(jTextArea1.getText());
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
                         jTextArea1.setText(temp.toString());
-                        jTextArea1.append(numDelayClick-- + " sec...\n");
+                        jTextArea1.append(numDelayClick-- + " 秒後開始...\n");
                         if (numDelayClick < 0) {
                             timer.cancel();
                             connect = true;
@@ -214,7 +216,7 @@ public class SeoFrame extends javax.swing.JFrame {
                 }, 0, 1000);
             } else {
                 numError = false;
-                btnStart.setText("Start");
+                btnStart.setText("開始");
             }
 
             writeConfig();
@@ -222,7 +224,7 @@ public class SeoFrame extends javax.swing.JFrame {
         } else {
             timer.cancel();
             btnStart.setEnabled(false);
-            jTextArea1.append("Stoping...\n");
+            jTextArea1.append("停止中...\n");
             connect = false;
         }
 
@@ -315,20 +317,25 @@ public class SeoFrame extends javax.swing.JFrame {
                             String resultUrl = getHtml(searchEngine + keyText);
 //                            System.out.println("resultUrl: "+resultUrl);
                             String matchUrl = new AnalyUrl().analyUrl(resultUrl, keyUrl, keyText);
-                            jTextArea1.append("Search finish.\n");
-                            jTextArea1.append("Start click in " + numDelayWait + " sec...\n");
-
-                            Thread.sleep(1000 * numDelayWait);
-
-                            getHtml(matchUrl);
-                            jTextArea1.append("Open URL finish.\n");
-                            if (chkWaitPeriod) {
-                                jTextArea1.append("Wait " + numDelayWait + " sec to restart...\n");
+                            jTextArea1.append("搜尋結束.\n");
+                            if (matchUrl.contains(keyUrl)) {
+                                jTextArea1.append("搜尋到目標網址...\n");
+                                jTextArea1.append("搜尋點擊將於2秒後開始...\n");
+                                Thread.sleep(2000);
+                                getHtml(matchUrl);
+                                jTextArea1.append("開啟網頁結束.\n");
                             } else {
-                                jTextArea1.append("Finish click.\n");
+                                jTextArea1.append("沒有搜尋到目標網址...\n");
+                            }
+
+                            if (chkWaitPeriod) {
+                                jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
+                                Thread.sleep(1000 * numDelayWait);
+                            } else {
+                                jTextArea1.append("完成.\n");
                                 connect = false;
                                 isStart = false;
-                                btnStart.setText("Start");
+                                btnStart.setText("開始");
 
                                 if (chkClickPeriod) {
                                     numDelayClick = Integer.parseInt(jNumDelayClick.getText());
@@ -338,19 +345,18 @@ public class SeoFrame extends javax.swing.JFrame {
                             }
                         }
 
-                        jTextArea1.append("Stopped.\n");
-                        btnStart.setText("Start");
+                        jTextArea1.append("終止搜尋.\n");
+                        btnStart.setText("開始");
                         btnStart.setEnabled(true);
 
                     } catch (InterruptedException ex) {
 //                    Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Click target InterruptedException: " + ex.getMessage());
-                        jTextArea1.append("Get html Stop\n");
+                        jTextArea1.append("取得網頁終止\n");
                     } catch (IOException ex) {
                         Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
-
                         System.out.println("Click target IOException: " + ex.getMessage());
-                        jTextArea1.append("Get html has IOException\n");
+                        jTextArea1.append("取得網頁出現錯誤\n");
                     }
                 }
 
@@ -360,8 +366,8 @@ public class SeoFrame extends javax.swing.JFrame {
 
         } else {
             if (thread != null) {
-                jTextArea1.append("Stop \n");
-                btnStart.setText("Start");
+                jTextArea1.append("終止連線.\n");
+                btnStart.setText("開始");
                 thread.interrupt();
                 btnStart.setEnabled(true);
             }
