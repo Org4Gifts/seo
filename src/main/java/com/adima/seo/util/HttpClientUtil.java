@@ -14,7 +14,16 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.lang3.StringUtils;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 //import org.apache.commons.lang.xwork.StringUtils;
 
 /**
@@ -75,6 +84,42 @@ public class HttpClientUtil {
         return rest;
     }
 
+//https://www.itread01.com/content/1558576864.html
+    public static String getNewHtml(String url) {
+        //1.生成httpclient，相當於該開啟一個瀏覽器
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        //2.建立get請求，相當於在瀏覽器位址列輸入 網址
+        HttpGet request = new HttpGet(url);
+        String html = "error";
+        try {
+            //3.執行get請求，相當於在輸入位址列後敲回車鍵
+            response = httpClient.execute(request);
+
+            //4.判斷響應狀態為200，進行處理
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                //5.獲取響應內容
+                HttpEntity httpEntity = response.getEntity();
+                html = EntityUtils.toString(httpEntity, "utf-8");
+                System.out.println(html);
+            } else {
+                //如果返回狀態不是200，比如404（頁面不存在）等，根據情況做處理，這裡略
+                System.out.println("返回狀態不是200");
+                System.out.println(EntityUtils.toString(response.getEntity(), "utf-8"));
+                html = EntityUtils.toString(response.getEntity(), "utf-8");
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            //6.關閉
+            HttpClientUtils.closeQuietly(response);
+            HttpClientUtils.closeQuietly(httpClient);
+        }
+        return html;
+    }
+
     public static void main(String[] args) throws HttpException, IOException {
 //    String url = "http://blog.csdn.net/xmlrequest/article/details/11519503";  
         String engine = "https://www.google.com.tw/search?q=";
@@ -86,8 +131,11 @@ public class HttpClientUtil {
 //        String newUrl = new AnalyUrl().analyUrl(getHtml(engine + keyWord), keyUrl, keyWord);
 //        System.out.println(getHtml(newUrl));
 
-        String htmlResult = getHtml(engine + keyWord);
+//        String htmlResult = getHtml(engine + keyWord);
 //        ForFile.writeFileContent("", htmlResult);
+
+        String htmlResult = getNewHtml(engine + keyWord);
+                ForFile.writeFileContent("", htmlResult);
 //
 //        String newUrl = new AnalyUrl().analyUrl(htmlResult, keyUrl, keyWord);
 //        
