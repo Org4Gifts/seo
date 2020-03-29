@@ -83,6 +83,7 @@ public class SeoFrame extends javax.swing.JFrame {
         });
 
         jSearchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/search?q=", "https://tw.search.yahoo.com/search?p=", "https://www.bing.com/search?q=" }));
+        jSearchEngine.setEnabled(false);
 
         jLabel3.setText("搜尋引擎   :  ");
 
