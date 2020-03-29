@@ -27,7 +27,7 @@ public class AnalyUrl {
             firstword = token.nextToken();
 
 //            if (firstword.contains("href")) {
-                System.out.println("firstword:  " + firstword);
+//                System.out.println("firstword:  " + firstword);
 //            }
 
             if (!compstr.comparestring("google.com", firstword) && !compstr.comparestring("cache", firstword)) {
