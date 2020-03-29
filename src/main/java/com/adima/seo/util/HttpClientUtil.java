@@ -61,7 +61,8 @@ public class HttpClientUtil {
         if (!StringUtils.isBlank(cookie)) {
             method.addRequestHeader("Cookie", cookie);
         }
-        method.addRequestHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727");
+//        method.addRequestHeader("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727");
+        method.addRequestHeader("User-Agent", "Mozilla/5.0 AppleWebKit/537.36 (KHTML like Gecko) Gecko/20100101 Firefox/72.0");
         //Mozilla/5.0 (Windows NT 6.1; rv:7.0.1) Gecko/20100101 Firefox/7.0.1  
         httpClient.executeMethod(method);
 
@@ -85,7 +86,7 @@ public class HttpClientUtil {
     }
 
 //https://www.itread01.com/content/1558576864.html
-    public static String getNewHtml(String url) {
+    public static String getNewHtml(String url) throws IOException {
         //1.生成httpclient，相當於該開啟一個瀏覽器
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
@@ -110,9 +111,7 @@ public class HttpClientUtil {
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
+        }finally {
             //6.關閉
             HttpClientUtils.closeQuietly(response);
             HttpClientUtils.closeQuietly(httpClient);
@@ -133,13 +132,14 @@ public class HttpClientUtil {
 
 //        String htmlResult = getHtml(engine + keyWord);
 //        ForFile.writeFileContent("", htmlResult);
-
         String htmlResult = getNewHtml(engine + keyWord);
-                ForFile.writeFileContent("", htmlResult);
+        ForFile.writeFileContent("", htmlResult);
 //
-//        String newUrl = new AnalyUrl().analyUrl(htmlResult, keyUrl, keyWord);
-//        
-//        ForFile.writeFileContent("", newUrl);
+        String newUrl = new AnalyUrl().analyUrl(htmlResult, keyUrl, keyWord);
+        ForFile.writeFileContent("", newUrl);
+
+        htmlResult = getNewHtml(newUrl);
+        ForFile.writeFileContent("", htmlResult);
 //        
 //        ForFile.writeFileContent("", getHtml(newUrl));
         //寫入搜尋結果

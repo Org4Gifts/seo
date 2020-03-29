@@ -21,12 +21,12 @@ import javax.swing.text.DefaultCaret;
  *
  * @author yctse
  */
-public class SeoFrame extends javax.swing.JFrame {
+public class SeoFrameVPN extends javax.swing.JFrame {
 
     /**
      * Creates new form SeoFrame
      */
-    public SeoFrame() {
+    public SeoFrameVPN() {
         initComponents();
     }
 
@@ -267,14 +267,15 @@ public class SeoFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SeoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeoFrameVPN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SeoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeoFrameVPN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SeoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeoFrameVPN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SeoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeoFrameVPN.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Read config */
@@ -285,7 +286,7 @@ public class SeoFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SeoFrame().setVisible(true);
+                new SeoFrameVPN().setVisible(true);
             }
         });
     }
@@ -357,7 +358,7 @@ public class SeoFrame extends javax.swing.JFrame {
                         System.out.println("Click target InterruptedException: " + ex.getMessage());
                         jTextArea1.append("取得網頁終止\n");
                     } catch (IOException ex) {
-                        Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(SeoFrameVPN.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Click target IOException: " + ex.getMessage());
                         jTextArea1.append("取得網頁出現錯誤\n");
                     }
