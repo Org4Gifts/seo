@@ -26,6 +26,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 //import org.apache.commons.lang.xwork.StringUtils;
 
+import java.util.List;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.html.HtmlLink;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
 /**
  *
  * @author yctse
@@ -111,12 +120,62 @@ public class HttpClientUtil {
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             //6.關閉
             HttpClientUtils.closeQuietly(response);
             HttpClientUtils.closeQuietly(httpClient);
         }
         return html;
+    }
+
+    public static void newMethod(String url, String keyWd, String keyUrl) throws IOException {
+        // 创建webclient
+        WebClient webClient = new WebClient();
+        // 取消 JS 支持
+        webClient.getOptions().setJavaScriptEnabled(false);
+        // 取消 CSS 支持
+        webClient.getOptions().setCssEnabled(false);
+        // 获取指定网页实体
+        HtmlPage page = (HtmlPage) webClient.getPage(url);
+        // 获取搜索输入框
+//        HtmlInput input = (HtmlInput) page.getHtmlElementById("input");
+        HtmlInput input = page.getElementByName("q");
+//        System.out.println("input = " + input.getTagName()); //取得tagName
+
+        // 往输入框 “填值”
+        input.setValueAttribute(keyWd);
+//        System.out.println("input = " + input.asText());
+        // 获取搜索按钮
+//        HtmlInput btn = (HtmlInput) page.getHtmlElementById("search-button");
+        HtmlInput btn = page.getElementByName("btnK");
+//        System.out.println("input = " + btn.asText());
+        // “点击” 搜索
+        HtmlPage page2 = btn.click();
+        System.out.println("page2 = " + page2.getTitleText());
+//        System.out.println("link = " + page2.getElementById("pnnext").asText());
+//        HtmlLink link = (HtmlLink)page2.getElementById("pnnext");
+//                System.out.println("link = " + link.asText());
+        // 选择元素
+//        List<HtmlElement> spanList = page2.getByXPath("//h3[@class='res-title']/a");
+        List<HtmlElement> spanList = page2.getTabbableElements();
+        for (int i = 0; i < spanList.size(); i++) {
+            // 输出新页面的文本
+            HtmlElement element = spanList.get(i);
+            String linkName = element.asText();
+            String linkUrl = element.getAttribute("href");
+            System.out.println(i + 1 + "、" + linkName + " 、" +linkUrl );
+            if(linkName.contains("阿蒂瑪") && linkUrl.contains(keyUrl)){
+                HtmlAnchor link = (HtmlAnchor) element;
+                HtmlPage page3 = link.click();
+                System.out.println("link = " + page3.getTitleText());
+                break;
+            }else if(linkName.equals("下一頁 >")){
+                HtmlAnchor link = (HtmlAnchor) element;
+                HtmlPage page3 = link.click();
+                System.out.println("next = " + page3.getTitleText());
+                break;
+            }
+        }
     }
 
     public static void main(String[] args) throws HttpException, IOException {
@@ -132,15 +191,16 @@ public class HttpClientUtil {
 
 //        String htmlResult = getHtml(engine + keyWord);
 //        ForFile.writeFileContent("", htmlResult);
-        String htmlResult = getNewHtml(engine + keyWord);
-        ForFile.writeFileContent("", htmlResult);
-//
-        String newUrl = new AnalyUrl().analyUrl(htmlResult, keyUrl, keyWord);
-        ForFile.writeFileContent("", newUrl);
-
-        htmlResult = getNewHtml(newUrl);
-        ForFile.writeFileContent("", htmlResult);
+//        String htmlResult = getNewHtml(engine + keyWord);
+//        ForFile.writeFileContent("", htmlResult);
 //        
+//        String newUrl = new AnalyUrl().analyUrl(htmlResult, keyUrl, keyWord);
+//        ForFile.writeFileContent("", newUrl);
+//
+//        htmlResult = getNewHtml(newUrl);
+//        ForFile.writeFileContent("", htmlResult);
+        newMethod("https://www.google.com.tw/", keyWord, keyUrl);
+
 //        ForFile.writeFileContent("", getHtml(newUrl));
         //寫入搜尋結果
 //          ForFile.writeFileContent("", getHtml(engine + keyWord));
