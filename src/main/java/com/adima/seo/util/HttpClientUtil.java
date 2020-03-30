@@ -34,6 +34,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlLink;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -128,7 +129,7 @@ public class HttpClientUtil {
         return html;
     }
 
-    public static void newMethod(String url, String keyWd, String keyUrl) throws IOException {
+    public static void simulateWeb(String targetUrl, String keyText, String keyUrl) throws IOException, InterruptedException {
         // 创建webclient
         WebClient webClient = new WebClient();
         // 取消 JS 支持
@@ -136,49 +137,129 @@ public class HttpClientUtil {
         // 取消 CSS 支持
         webClient.getOptions().setCssEnabled(false);
         // 获取指定网页实体
-        HtmlPage page = (HtmlPage) webClient.getPage(url);
+        HtmlPage qryPage = (HtmlPage) webClient.getPage(targetUrl);
         // 获取搜索输入框
 //        HtmlInput input = (HtmlInput) page.getHtmlElementById("input");
-        HtmlInput input = page.getElementByName("q");
+        HtmlInput input = qryPage.getElementByName("q");
 //        System.out.println("input = " + input.getTagName()); //取得tagName
 
         // 往输入框 “填值”
-        input.setValueAttribute(keyWd);
+        input.setValueAttribute(keyText);
 //        System.out.println("input = " + input.asText());
         // 获取搜索按钮
 //        HtmlInput btn = (HtmlInput) page.getHtmlElementById("search-button");
-        HtmlInput btn = page.getElementByName("btnK");
+        HtmlInput qryBtn = qryPage.getElementByName("btnK");
 //        System.out.println("input = " + btn.asText());
         // “点击” 搜索
-        HtmlPage page2 = btn.click();
-        System.out.println("page2 = " + page2.getTitleText());
+        HtmlPage qryResultPage = qryBtn.click();
+//        System.out.println("page2 = " + page2.getTitleText());
 //        System.out.println("link = " + page2.getElementById("pnnext").asText());
 //        HtmlLink link = (HtmlLink)page2.getElementById("pnnext");
 //                System.out.println("link = " + link.asText());
         // 选择元素
 //        List<HtmlElement> spanList = page2.getByXPath("//h3[@class='res-title']/a");
-        List<HtmlElement> spanList = page2.getTabbableElements();
-        for (int i = 0; i < spanList.size(); i++) {
-            // 输出新页面的文本
-            HtmlElement element = spanList.get(i);
-            String linkName = element.asText();
-            String linkUrl = element.getAttribute("href");
-            System.out.println(i + 1 + "、" + linkName + " 、" +linkUrl );
-            if(linkName.contains("阿蒂瑪") && linkUrl.contains(keyUrl)){
-                HtmlAnchor link = (HtmlAnchor) element;
-                HtmlPage page3 = link.click();
-                System.out.println("link = " + page3.getTitleText());
-                break;
-            }else if(linkName.equals("下一頁 >")){
-                HtmlAnchor link = (HtmlAnchor) element;
-                HtmlPage page3 = link.click();
-                System.out.println("next = " + page3.getTitleText());
-                break;
+        HtmlPage recyclePage = null;
+        boolean getWeb = false;
+        int count = 0;
+        List<HtmlElement> elementList = qryResultPage.getTabbableElements();
+        do {
+            Thread.sleep(2000);
+            for (int i = 0; i < elementList.size(); i++) {
+                // 输出新页面的文本
+                HtmlElement element = elementList.get(i);
+                String linkName = element.asText();
+                String linkUrl = element.getAttribute("href");
+//                System.out.println(i + 1 + "、" + linkName + " 、" + linkUrl);
+                if (linkName.contains("阿蒂瑪") && linkUrl.contains(keyUrl)) {
+                    HtmlAnchor targetLink = (HtmlAnchor) element;
+                    recyclePage = targetLink.click();
+                    System.out.println("link = " + recyclePage.getTitleText());
+                    getWeb = true;
+                    break;
+                } else if (linkName.contains(">")) {
+                    HtmlAnchor nextLink = (HtmlAnchor) element;
+                    recyclePage = nextLink.click();
+                    System.out.println("next = " + recyclePage.getTitleText());
+                    break;
+                }
             }
-        }
+            elementList = recyclePage.getTabbableElements();
+            System.out.println("count = " + count);
+            count++;
+
+        } while (!getWeb && count < 11);
     }
 
-    public static void main(String[] args) throws HttpException, IOException {
+    public static boolean simulateWeb(String targetUrl, String keyText, String keyUrl, JTextArea area) throws IOException, InterruptedException {
+        // 创建webclient
+        WebClient webClient = new WebClient();
+        // 取消 JS 支持
+        webClient.getOptions().setJavaScriptEnabled(false);
+        // 取消 CSS 支持
+        webClient.getOptions().setCssEnabled(false);
+        // 获取指定网页实体
+        HtmlPage qryPage = (HtmlPage) webClient.getPage(targetUrl);
+        // 获取搜索输入框
+//        HtmlInput input = (HtmlInput) page.getHtmlElementById("input");
+        HtmlInput input = qryPage.getElementByName("q");
+//        System.out.println("input = " + input.getTagName()); //取得tagName
+
+        // 往输入框 “填值”
+        input.setValueAttribute(keyText);
+//        System.out.println("input = " + input.asText());
+        // 获取搜索按钮
+//        HtmlInput btn = (HtmlInput) page.getHtmlElementById("search-button");
+        HtmlInput qryBtn = qryPage.getElementByName("btnK");
+//        System.out.println("input = " + btn.asText());
+        // “点击” 搜索
+        HtmlPage qryResultPage = qryBtn.click();
+//        System.out.println("page2 = " + page2.getTitleText());
+//        System.out.println("link = " + page2.getElementById("pnnext").asText());
+//        HtmlLink link = (HtmlLink)page2.getElementById("pnnext");
+//                System.out.println("link = " + link.asText());
+        // 选择元素
+//        List<HtmlElement> spanList = page2.getByXPath("//h3[@class='res-title']/a");
+        HtmlPage recyclePage = null;
+        boolean getWeb = false;
+        int count = 0;
+        List<HtmlElement> elementList = qryResultPage.getTabbableElements();
+        do {
+            Thread.sleep(2000);
+            for (int i = 0; i < elementList.size(); i++) {
+                // 输出新页面的文本
+                HtmlElement element = elementList.get(i);
+                String linkName = element.asText();
+                String linkUrl = element.getAttribute("href");
+//                System.out.println(i + 1 + "、" + linkName + " 、" + linkUrl);
+                if (linkName.contains("阿蒂瑪") && linkUrl.contains(keyUrl)) {
+                    area.append("找到目標，準備點擊!\n");
+                    HtmlAnchor targetLink = (HtmlAnchor) element;
+                    recyclePage = targetLink.click();
+                    System.out.println("link = " + recyclePage.getTitleText());
+                    getWeb = true;
+                    break;
+                } else if (linkName.contains(">")) {
+                    area.append("找不到目標網址...\n");
+                    area.append("兩秒後跳頁尋找...\n");
+                    HtmlAnchor nextLink = (HtmlAnchor) element;
+                    recyclePage = nextLink.click();
+                    System.out.println("next = " + recyclePage.getTitleText());
+                    break;
+                }
+            }
+            elementList = recyclePage.getTabbableElements();
+            System.out.println("count = " + count);
+            if (count == 10) {
+                area.append("搜尋次數已超過預設目標" + count * 10 + "次\n");
+                area.append("即將終止搜尋....\n");
+            }
+            count++;
+
+        } while (!getWeb && count < 11);
+        return getWeb;
+    }
+
+    public static void main(String[] args) throws HttpException, IOException, InterruptedException {
 //    String url = "http://blog.csdn.net/xmlrequest/article/details/11519503";  
         String engine = "https://www.google.com.tw/search?q=";
         String keyWord = "adima";
@@ -199,7 +280,7 @@ public class HttpClientUtil {
 //
 //        htmlResult = getNewHtml(newUrl);
 //        ForFile.writeFileContent("", htmlResult);
-        newMethod("https://www.google.com.tw/", keyWord, keyUrl);
+        simulateWeb("https://www.google.com.tw/", keyWord, keyUrl);
 
 //        ForFile.writeFileContent("", getHtml(newUrl));
         //寫入搜尋結果
