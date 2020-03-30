@@ -31,7 +31,10 @@ public class ForFile {
             + "chkClickPeroid:false\n"
             + "numDelayClick:5\n"
             + "chkClickWait:true\n"
-            + "numDelayWait:10\n";
+            + "numDelayWait:10\n"
+            + "enableAcc:false\n"
+            + "acc:78428956@hinet.net\n"
+            + "passWd:46653243\n";
 
     /**
      * 建立檔案
