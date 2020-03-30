@@ -8,6 +8,7 @@ package com.adima.seo;
 import com.adima.seo.util.AnalyUrl;
 import static com.adima.seo.util.HttpClientUtil.getHtml;
 import static com.adima.seo.util.HttpClientUtil.getNewHtml;
+import static com.adima.seo.util.HttpClientUtil.simulateWeb;
 import com.adima.seo.util.ForFile;
 import java.io.IOException;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class SeoFrame extends javax.swing.JFrame {
             }
         });
 
-        jSearchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/search?q=", "https://tw.search.yahoo.com/search?p=", "https://www.bing.com/search?q=" }));
+        jSearchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/", "https://tw.search.yahoo.com/", "https://www.bing.com/" }));
         jSearchEngine.setEnabled(false);
 
         jLabel3.setText("搜尋引擎   :  ");
@@ -243,8 +244,8 @@ public class SeoFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private String keyText, keyUrl, searchEngine;
-    private Boolean isStart = false, chkClickPeriod = false, chkWaitPeriod = false, numError = false, connect = false;
-    private int numDelayClick = 1, numDelayWait = 1;
+    private Boolean isStart = false, chkClickPeriod = false, chkWaitPeriod = false, numError = false, connect = false, searchFailed = false;
+    private int numDelayClick = 1, numDelayWait = 1, searchCount = 0;
     private StringBuilder temp = new StringBuilder();
     private static Map<String, String> map;
 
@@ -316,6 +317,68 @@ public class SeoFrame extends javax.swing.JFrame {
                 public void run() {
                     try {
                         while (isStart) {
+
+                            searchFailed = simulateWeb(searchEngine, keyText, keyUrl, jTextArea1);
+                            if (searchFailed) {
+                                jTextArea1.append("搜尋失敗！ 即將停止搜尋\n");
+                            }
+
+                            if (chkWaitPeriod && !searchFailed) {
+                                jTextArea1.append("已完成第" + ++searchCount + "次搜尋...\n");
+                                jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
+                                Thread.sleep(1000 * numDelayWait);
+                            } else {
+                                jTextArea1.append("完成.\n");
+                                connect = false;
+                                isStart = false;
+                                btnStart.setText("開始");
+
+                                if (chkClickPeriod) {
+                                    numDelayClick = Integer.parseInt(jNumDelayClick.getText());
+                                } else {
+                                    numDelayClick = 1;
+                                }
+                            }
+                        }
+
+                        jTextArea1.append("終止搜尋.\n");
+                        btnStart.setText("開始");
+                        btnStart.setEnabled(true);
+
+                    } catch (InterruptedException ex) {
+//                    Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Click target InterruptedException: " + ex.getMessage());
+                        jTextArea1.append("取得網頁終止\n");
+                    } catch (IOException ex) {
+                        Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("Click target IOException: " + ex.getMessage());
+                        jTextArea1.append("取得網頁出現錯誤\n");
+                    }
+                }
+
+            });
+
+            thread.start();
+
+        } else {
+            if (thread != null) {
+                jTextArea1.append("終止連線.\n");
+                btnStart.setText("開始");
+                thread.interrupt();
+                btnStart.setEnabled(true);
+            }
+        }
+    }
+
+    void startConnect2() {
+        temp.setLength(0);
+        Thread thread = null;
+        if (connect) {
+            thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (isStart) {
                             String resultUrl = getNewHtml(searchEngine + keyText);
 //                            System.out.println("resultUrl: "+resultUrl);
                             String matchUrl = new AnalyUrl().analyUrl(resultUrl, keyUrl, keyText);
@@ -325,7 +388,7 @@ public class SeoFrame extends javax.swing.JFrame {
                                 jTextArea1.append("搜尋點擊將於2秒後開始...\n");
                                 Thread.sleep(2000);
 //                                getHtml(matchUrl);
-                                  getNewHtml(matchUrl);
+                                getNewHtml(matchUrl);
                                 jTextArea1.append("開啟網頁結束.\n");
                             } else {
                                 jTextArea1.append("沒有搜尋到目標網址...\n");

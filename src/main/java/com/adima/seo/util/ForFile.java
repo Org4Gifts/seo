@@ -31,7 +31,7 @@ public class ForFile {
             + "chkClickPeroid:false\n"
             + "numDelayClick:5\n"
             + "chkClickWait:true\n"
-            + "numDelayWait:5\n";
+            + "numDelayWait:10\n";
 
     /**
      * 建立檔案

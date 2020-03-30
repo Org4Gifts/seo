@@ -220,7 +220,7 @@ public class HttpClientUtil {
         // 选择元素
 //        List<HtmlElement> spanList = page2.getByXPath("//h3[@class='res-title']/a");
         HtmlPage recyclePage = null;
-        boolean getWeb = false;
+        boolean searchFailed = true;
         int count = 0;
         List<HtmlElement> elementList = qryResultPage.getTabbableElements();
         do {
@@ -236,7 +236,7 @@ public class HttpClientUtil {
                     HtmlAnchor targetLink = (HtmlAnchor) element;
                     recyclePage = targetLink.click();
                     System.out.println("link = " + recyclePage.getTitleText());
-                    getWeb = true;
+                    searchFailed = false;
                     break;
                 } else if (linkName.contains(">")) {
                     area.append("找不到目標網址...\n");
@@ -255,8 +255,8 @@ public class HttpClientUtil {
             }
             count++;
 
-        } while (!getWeb && count < 11);
-        return getWeb;
+        } while (searchFailed && count < 11);
+        return searchFailed;
     }
 
     public static void main(String[] args) throws HttpException, IOException, InterruptedException {
