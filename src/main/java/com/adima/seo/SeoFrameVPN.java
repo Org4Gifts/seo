@@ -22,6 +22,7 @@ import javax.swing.text.DefaultCaret;
 /**
  *
  * @author yctse
+ * http://boywhy.blogspot.com/2017/02/netbeansmavenjar.html executeable jar
  */
 public class SeoFrameVPN extends javax.swing.JFrame {
 
