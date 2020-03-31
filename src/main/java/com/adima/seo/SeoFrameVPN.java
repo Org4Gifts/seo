@@ -362,6 +362,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                                 jTextArea1.append("準備ADSL連線...\n");
                                 adslOn = ConnectNetWork.connAdsl("Test", acc, passWd);
                                 Thread.sleep(3000);
+                                
                                 if (adslOn) {
                                     jTextArea1.append("連線成功! 準備搜尋...\n");
                                 } else {
@@ -378,6 +379,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                                 jTextArea1.append("已完成第" + ++searchCount + "次搜尋...\n");
                                 jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
                                 Thread.sleep(1000 * numDelayWait);
+                                
                                 if (enableAcc) {
                                     if (adslOn) {
                                         jTextArea1.append("準備斷線...\n");
