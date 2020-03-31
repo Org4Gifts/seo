@@ -6,6 +6,7 @@
 package com.adima.seo;
 
 import com.adima.seo.util.AnalyUrl;
+import com.adima.seo.util.ConnectNetWork;
 import static com.adima.seo.util.HttpClientUtil.getHtml;
 import static com.adima.seo.util.HttpClientUtil.getNewHtml;
 import static com.adima.seo.util.HttpClientUtil.simulateWeb;
@@ -283,7 +284,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
 
     private String keyText, keyUrl, searchEngine, acc, passWd;
     private Boolean isStart = false, chkClickPeriod = false, chkWaitPeriod = false, numError = false,
-            connect = false, searchFailed = false, enableAcc = false;
+            connect = false, searchFailed = false, enableAcc = false, adslOn = false, adslOff = false;
     private int numDelayClick = 1, numDelayWait = 1, searchCount = 0;
     private StringBuilder temp = new StringBuilder();
     private static Map<String, String> map;
@@ -357,6 +358,16 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                 public void run() {
                     try {
                         while (isStart) {
+                            if (enableAcc) {
+                                jTextArea1.append("準備ADSL連線...\n");
+                                adslOn = ConnectNetWork.connAdsl("Test", acc, passWd);
+                                Thread.sleep(3000);
+                                if (adslOn) {
+                                    jTextArea1.append("連線成功! 準備搜尋...\n");
+                                } else {
+                                    jTextArea1.append("連線失敗.\n");
+                                }
+                            }
 
                             searchFailed = simulateWeb(searchEngine, keyText, keyUrl, jTextArea1);
                             if (searchFailed) {
@@ -367,6 +378,18 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                                 jTextArea1.append("已完成第" + ++searchCount + "次搜尋...\n");
                                 jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
                                 Thread.sleep(1000 * numDelayWait);
+                                if (enableAcc) {
+                                    if (adslOn) {
+                                        jTextArea1.append("準備斷線...\n");
+                                        adslOff = ConnectNetWork.cutAdsl("Test");
+                                        Thread.sleep(3000);
+                                        if (adslOff) {
+                                            jTextArea1.append("已斷線.\n");
+                                        } else {
+                                            jTextArea1.append("斷線失敗.\n");
+                                        }
+                                    }
+                                }
                             } else {
                                 jTextArea1.append("完成.\n");
                                 connect = false;
@@ -393,6 +416,8 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                         Logger.getLogger(SeoFrameVPN.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Click target IOException: " + ex.getMessage());
                         jTextArea1.append("取得網頁出現錯誤\n");
+                    } catch (Exception ex) {
+                        Logger.getLogger(SeoFrameVPN.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
