@@ -7,7 +7,6 @@ package com.adima.seo;
 
 import com.adima.seo.util.AnalyUrl;
 import com.adima.seo.util.ConnectNetWork;
-import static com.adima.seo.util.HttpClientUtil.getHtml;
 import static com.adima.seo.util.HttpClientUtil.getNewHtml;
 import static com.adima.seo.util.HttpClientUtil.simulateWeb;
 import com.adima.seo.util.ForFile;
@@ -21,8 +20,8 @@ import javax.swing.text.DefaultCaret;
 
 /**
  *
- * @author yctse
- * http://boywhy.blogspot.com/2017/02/netbeansmavenjar.html executeable jar
+ * @author yctse http://boywhy.blogspot.com/2017/02/netbeansmavenjar.html
+ * executeable jar
  */
 public class SeoFrameVPN extends javax.swing.JFrame {
 
@@ -204,6 +203,11 @@ public class SeoFrameVPN extends javax.swing.JFrame {
             searchEngine = jSearchEngine.getSelectedItem().toString();
             chkClickPeriod = jChkClickPeriod.isSelected();
             chkWaitPeriod = jChkWaitPeriod.isSelected();
+
+            enableAcc = jEnableAcc.isSelected();
+            acc = jAcc.getText().trim();
+            passWd = jPassWd.getText().trim();
+
             if (chkClickPeriod) {
                 try {
                     numDelayClick = Integer.parseInt(jNumDelayClick.getText());
@@ -232,8 +236,8 @@ public class SeoFrameVPN extends javax.swing.JFrame {
             map.put("chkClickPeriod", chkClickPeriod.toString());
             map.put("chkClickWait", chkWaitPeriod.toString());
             map.put("enableAcc", jEnableAcc.toString());
-            map.put("acc", jAcc.toString());
-            map.put("passWd", jPassWd.toString());
+            map.put("acc", acc);
+            map.put("passWd", passWd);
 
             if (!numError) {
                 jTextArea1.append("即將於...\n");
@@ -363,7 +367,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                                 jTextArea1.append("準備ADSL連線...\n");
                                 adslOn = ConnectNetWork.connAdsl("Test", acc, passWd);
                                 Thread.sleep(3000);
-                                
+
                                 if (adslOn) {
                                     jTextArea1.append("連線成功! 準備搜尋...\n");
                                 } else {
@@ -380,7 +384,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                                 jTextArea1.append("已完成第" + ++searchCount + "次搜尋...\n");
                                 jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
                                 Thread.sleep(1000 * numDelayWait);
-                                
+
                                 if (enableAcc) {
                                     if (adslOn) {
                                         jTextArea1.append("準備斷線...\n");
@@ -415,12 +419,35 @@ public class SeoFrameVPN extends javax.swing.JFrame {
 //                    Logger.getLogger(SeoFrame.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Click target InterruptedException: " + ex.getMessage());
                         jTextArea1.append("取得網頁終止\n");
+
                     } catch (IOException ex) {
                         Logger.getLogger(SeoFrameVPN.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Click target IOException: " + ex.getMessage());
                         jTextArea1.append("取得網頁出現錯誤\n");
+
+                        jTextArea1.append("終止seo程式.\n");
+                        connect = false;
+                        isStart = false;
+                        btnStart.setText("開始");
+
+                        if (chkClickPeriod) {
+                            numDelayClick = Integer.parseInt(jNumDelayClick.getText());
+                        } else {
+                            numDelayClick = 1;
+                        }
                     } catch (Exception ex) {
                         Logger.getLogger(SeoFrameVPN.class.getName()).log(Level.SEVERE, null, ex);
+
+                        jTextArea1.append("終止seo程式.\n");
+                        connect = false;
+                        isStart = false;
+                        btnStart.setText("開始");
+
+                        if (chkClickPeriod) {
+                            numDelayClick = Integer.parseInt(jNumDelayClick.getText());
+                        } else {
+                            numDelayClick = 1;
+                        }
                     }
                 }
 
