@@ -48,7 +48,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
         jChkClickPeriod = new javax.swing.JCheckBox();
         jNumDelayClick = new javax.swing.JTextField();
         jChkWaitPeriod = new javax.swing.JCheckBox();
-        jNumDelayWait = new javax.swing.JTextField();
+        jNumDelayWaitEnd = new javax.swing.JTextField();
         btnStart = new javax.swing.JButton();
         jSearchEngine = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
@@ -58,6 +58,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
         jAcc = new javax.swing.JTextField();
         jPassWd = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jNumDelayWaitStart = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -80,7 +81,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
 
         jChkWaitPeriod.setText("重啟倒數");
 
-        jNumDelayWait.setText("5");
+        jNumDelayWaitEnd.setText("5");
 
         btnStart.setText("開始");
         btnStart.addActionListener(new java.awt.event.ActionListener() {
@@ -89,8 +90,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
             }
         });
 
-        jSearchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/", "https://tw.search.yahoo.com/", "https://www.bing.com/" }));
-        jSearchEngine.setEnabled(false);
+        jSearchEngine.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "https://www.google.com.tw/", "https://tw.yahoo.com/", "https://www.bing.com/" }));
 
         jLabel3.setText("搜尋引擎   :  ");
 
@@ -109,6 +109,8 @@ public class SeoFrameVPN extends javax.swing.JFrame {
         });
 
         jLabel4.setText("密碼     : ");
+
+        jNumDelayWaitStart.setText("5");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -138,10 +140,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPassWd, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jChkWaitPeriod)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jNumDelayWait, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jNumDelayWaitEnd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 9, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -152,8 +151,12 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jChkClickPeriod)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jNumDelayClick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(jNumDelayClick, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(37, 37, 37)
+                                .addComponent(jChkWaitPeriod)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jNumDelayWaitStart, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(96, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -175,7 +178,8 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                     .addComponent(jChkClickPeriod)
                     .addComponent(jNumDelayClick, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jChkWaitPeriod)
-                    .addComponent(jNumDelayWait, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jNumDelayWaitEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jNumDelayWaitStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jEnableAcc)
@@ -222,12 +226,24 @@ public class SeoFrameVPN extends javax.swing.JFrame {
 
             if (chkWaitPeriod) {
                 try {
-                    numDelayWait = Integer.parseInt(jNumDelayWait.getText());
-                    map.put("numDelayWait", numDelayWait + "");
+                    if(Integer.parseInt(jNumDelayWaitStart.getText()) < 5){
+                        jNumDelayWaitStart.setText("5");
+                    }
+                    if(Integer.parseInt(jNumDelayWaitEnd.getText()) < 10){
+                        jNumDelayWaitEnd.setText("10");
+                    }
+                    numDelayWaitStart = Integer.parseInt(jNumDelayWaitStart.getText());                    
+                    map.put("numDelayWaitStart", numDelayWaitStart + "");  
+                                
+                    numDelayWaitEnd = Integer.parseInt(jNumDelayWaitEnd.getText());
+                    map.put("numDelayWaitEnd", numDelayWaitEnd + "");                    
+                  
                 } catch (NumberFormatException e) {
                     jTextArea1.append("迴圈倒數數字轉換錯誤.\n");
                     numError = true;
                 }
+            }else{
+                numDelayWaitEnd = 5;
             }
 
             map.put("keyText", keyText);
@@ -235,7 +251,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
             map.put("searchEngine", jSearchEngine.getSelectedIndex() + "");
             map.put("chkClickPeriod", chkClickPeriod.toString());
             map.put("chkClickWait", chkWaitPeriod.toString());
-            map.put("enableAcc", jEnableAcc.toString());
+            map.put("enableAcc", enableAcc.toString());
             map.put("acc", acc);
             map.put("passWd", passWd);
 
@@ -277,10 +293,14 @@ public class SeoFrameVPN extends javax.swing.JFrame {
         jChkClickPeriod.setSelected(Boolean.parseBoolean(map.get("chkClickPeriod")));
         jNumDelayClick.setText(map.get("numDelayClick"));
         jChkWaitPeriod.setSelected(Boolean.parseBoolean(map.get("chkClickWait")));
-        jNumDelayWait.setText(map.get("numDelayWait"));
+        jNumDelayWaitStart.setText(map.get("numDelayWaitStart"));
+        jNumDelayWaitEnd.setText(map.get("numDelayWaitEnd"));
         jEnableAcc.setSelected(Boolean.parseBoolean(map.get("enableAcc")));
         jAcc.setText(map.get("acc"));
         jPassWd.setText(map.get("passWd"));
+        
+        DefaultCaret caret = (DefaultCaret)jTextArea1.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }//GEN-LAST:event_formWindowOpened
 
     private void jEnableAccActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jEnableAccActionPerformed
@@ -290,7 +310,7 @@ public class SeoFrameVPN extends javax.swing.JFrame {
     private String keyText, keyUrl, searchEngine, acc, passWd;
     private Boolean isStart = false, chkClickPeriod = false, chkWaitPeriod = false, numError = false,
             connect = false, searchFailed = false, enableAcc = false, adslOn = false, adslOff = false;
-    private int numDelayClick = 1, numDelayWait = 1, searchCount = 0;
+    private int numDelayClick = 1, numDelayWaitStart = 1, numDelayWaitEnd = 1, searchCount = 0;
     private StringBuilder temp = new StringBuilder();
     private static Map<String, String> map;
 
@@ -379,11 +399,14 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                             if (searchFailed) {
                                 jTextArea1.append("搜尋失敗！ 即將停止搜尋\n");
                             }
-
+                            int delay = (int)(Math.random() * numDelayWaitEnd) +1;
+                            if(delay < numDelayWaitStart){
+                                delay = numDelayWaitStart;
+                            }
                             if (chkWaitPeriod && !searchFailed) {
                                 jTextArea1.append("已完成第" + ++searchCount + "次搜尋...\n");
-                                jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
-                                Thread.sleep(1000 * numDelayWait);
+                                jTextArea1.append("等待" + delay + "秒後重啟搜尋...\n");
+                                Thread.sleep(1000 * delay);
 
                                 if (enableAcc) {
                                     if (adslOn) {
@@ -490,8 +513,8 @@ public class SeoFrameVPN extends javax.swing.JFrame {
                             }
 
                             if (chkWaitPeriod) {
-                                jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
-                                Thread.sleep(1000 * numDelayWait);
+                                jTextArea1.append("等待" + numDelayWaitStart + "秒後重啟搜尋...\n");
+                                Thread.sleep(1000 * numDelayWaitStart);
                             } else {
                                 jTextArea1.append("完成.\n");
                                 connect = false;
@@ -548,7 +571,8 @@ public class SeoFrameVPN extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JTextField jNumDelayClick;
-    private javax.swing.JTextField jNumDelayWait;
+    private javax.swing.JTextField jNumDelayWaitEnd;
+    private javax.swing.JTextField jNumDelayWaitStart;
     private javax.swing.JTextField jPassWd;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JComboBox<String> jSearchEngine;

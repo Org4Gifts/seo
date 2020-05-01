@@ -322,11 +322,14 @@ public class SeoFrame extends javax.swing.JFrame {
                             if (searchFailed) {
                                 jTextArea1.append("搜尋失敗！ 即將停止搜尋\n");
                             }
-
+                            int delay = (int)(Math.random() * numDelayWait) +1;
+                            if(delay < 4){
+                                delay = 5;
+                            }
                             if (chkWaitPeriod && !searchFailed) {
                                 jTextArea1.append("已完成第" + ++searchCount + "次搜尋...\n");
-                                jTextArea1.append("等待" + numDelayWait + "秒後重啟搜尋...\n");
-                                Thread.sleep(1000 * numDelayWait);
+                                jTextArea1.append("等待" + delay + "秒後重啟搜尋...\n");
+                                Thread.sleep(1000 * delay);
                             } else {
                                 jTextArea1.append("完成.\n");
                                 connect = false;

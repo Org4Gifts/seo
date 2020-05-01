@@ -201,7 +201,14 @@ public class HttpClientUtil {
         HtmlPage qryPage = (HtmlPage) webClient.getPage(targetUrl);
         // 获取搜索输入框
 //        HtmlInput input = (HtmlInput) page.getHtmlElementById("input");
-        HtmlInput input = qryPage.getElementByName("q");
+        HtmlInput input = null;
+        if(targetUrl.contains("google")){
+            input = qryPage.getElementByName("q");
+        }else if(targetUrl.contains("yahoo")){
+            input = qryPage.getHtmlElementById("UHSearchBox");
+        }else if(targetUrl.contains("bing")){
+            input = qryPage.getHtmlElementById("sb_form_q");
+        }
 //        System.out.println("input = " + input.getTagName()); //取得tagName
 
         // 往输入框 “填值”
@@ -209,7 +216,14 @@ public class HttpClientUtil {
 //        System.out.println("input = " + input.asText());
         // 获取搜索按钮
 //        HtmlInput btn = (HtmlInput) page.getHtmlElementById("search-button");
-        HtmlInput qryBtn = qryPage.getElementByName("btnK");
+        HtmlInput qryBtn =null;
+        if(targetUrl.contains("google")){
+            qryBtn = qryPage.getElementByName("btnK");
+        }else if(targetUrl.contains("yahoo")){
+            qryBtn = qryPage.getHtmlElementById("UHSearchWeb");
+        }else if(targetUrl.contains("bing")){
+            qryBtn = qryPage.getHtmlElementById("sb_form_go");
+        }
 //        System.out.println("input = " + btn.asText());
         // “点击” 搜索
         HtmlPage qryResultPage = qryBtn.click();
@@ -223,8 +237,7 @@ public class HttpClientUtil {
         boolean searchFailed = true;
         int count = 0;
         List<HtmlElement> elementList = qryResultPage.getTabbableElements();
-        do {
-            Thread.sleep(2000);
+        do {            
             for (int i = 0; i < elementList.size(); i++) {
                 // 输出新页面的文本
                 HtmlElement element = elementList.get(i);
@@ -232,14 +245,28 @@ public class HttpClientUtil {
                 String linkUrl = element.getAttribute("href");
 //                System.out.println(i + 1 + "、" + linkName + " 、" + linkUrl);
                 if (linkName.contains("阿蒂瑪") && linkUrl.contains(keyUrl)) {
-                    area.append("找到目標，準備點擊!\n");
+                    area.append("找到目標，位於搜尋結果第"+ (count+1)+"頁 第"+(i+1)+"個連結,準備點擊!\n");
                     HtmlAnchor targetLink = (HtmlAnchor) element;
                     recyclePage = targetLink.click();
                     System.out.println("link = " + recyclePage.getTitleText());
                     searchFailed = false;
                     break;
                 } else if (linkName.contains(">")) {
-                    area.append("找不到目標網址...\n");
+                    area.append("找不到目標網址第" + (count + 1) + "...\n");
+                    area.append("兩秒後跳頁尋找...\n");
+                    HtmlAnchor nextLink = (HtmlAnchor) element;
+                    recyclePage = nextLink.click();
+                    System.out.println("next = " + recyclePage.getTitleText());
+                    break;
+                }else if(linkName.contains("下一頁")){
+                    area.append("找不到目標網址第" + (count + 1) + "...\n");
+                    area.append("兩秒後跳頁尋找...\n");
+                    HtmlAnchor nextLink = (HtmlAnchor) element;
+                    recyclePage = nextLink.click();
+                    System.out.println("next = " + recyclePage.getTitleText());
+                    break;
+                }else if(linkName.contains("Next page")){
+                    area.append("找不到目標網址第" + (count + 1) + "...\n");
                     area.append("兩秒後跳頁尋找...\n");
                     HtmlAnchor nextLink = (HtmlAnchor) element;
                     recyclePage = nextLink.click();
@@ -248,14 +275,15 @@ public class HttpClientUtil {
                 }
             }
             elementList = recyclePage.getTabbableElements();
+
             System.out.println("count = " + count);
-            if (count == 10) {
-                area.append("搜尋次數已超過預設目標" + count * 10 + "次\n");
+            if (count == 20) {
+                area.append("搜尋目標已超過預設目標" + (count * 10) + "筆\n");
                 area.append("即將終止搜尋....\n");
             }
             count++;
-
-        } while (searchFailed && count < 11);
+            Thread.sleep(2000);
+        } while (searchFailed && count < 21);
         return searchFailed;
     }
 
