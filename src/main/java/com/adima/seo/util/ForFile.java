@@ -34,8 +34,9 @@ public class ForFile {
             + "numDelayWaitStart:5\n"
             + "numDelayWaitEnd:10\n"
             + "enableAcc:false\n"
-            + "acc:78428956@hinet.net\n"
-            + "passWd:46653243\n";
+            + "name:Test\n"
+            + "acc:74543278@wifi.hinet.net\n"
+            + "passWd:63968932\n";
 
     /**
      * 建立檔案

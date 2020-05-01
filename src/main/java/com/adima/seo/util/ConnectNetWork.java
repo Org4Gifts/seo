@@ -30,8 +30,11 @@ StringBuilder sbCmd = new StringBuilder();
 //這裡很重要，設定GB2312解決亂碼！！！
 //如果程式預設編碼就是GB2312，可以不寫
 //我NetBeans預設用UTF8
+//BufferedReader br = new BufferedReader(new InputStreamReader(p 
+//.getInputStream(), "GB2312")); 
 BufferedReader br = new BufferedReader(new InputStreamReader(p 
-.getInputStream(), "GB2312")); 
+.getInputStream()));
+
 String line; 
 while ((line = br.readLine()) != null) { 
 sbCmd.append(line  + "\n"); 
@@ -56,16 +59,20 @@ return msg;
 */ 
 public static boolean connAdsl(String adslTitle, String adslName, String adslPass) throws Exception { 
 System.out.println("正在建立連線."); 
+System.out.println("Creating connect."); 
 String adslCmd = "rasdial " +  adslTitle  + " " +  adslName +  " " +  adslPass; 
 String tempCmd = executeCmd(adslCmd); 
 //String tempCmd = executeCmd("ping www.youku.com"); 
 // 判斷是否連線成功 
+System.out.println("tempCmd: " + tempCmd); 
 if (tempCmd.indexOf("已連線") > 0) { 
 System.out.println("已成功建立連線."); 
+System.out.println("create success."); 
 return true; 
 } else { 
 System.err.println(tempCmd); 
 System.err.println("建立連線失敗"); 
+System.out.println("Create failed."); 
 return false; 
 } 
 } 
